@@ -31,10 +31,16 @@ int Graph::getEdges(){
     return _edges;
 }
 
+int Graph::getCost(position pos){
+    return pos._cost;
+}
+
 //Retorna o nó do grafo
 vertex Graph::getNode(int position){
    return _graph[position];  
 }
+
+
 
 //Printa o gráfico, mostrando cada vértice e suas adjacências
 //(Usado meramente para testes)
@@ -59,105 +65,123 @@ void Graph::resetGraph(){
     }
 }
 
-//Função de busca em largura
-// vector<char> Graph::BreadthFirstSearch(int pacmanPosition, int ghostPosition, bool &foundByGhost){
-//     int tamPath = 0;
-//     int current;
-//     bool end = false;
-//     position posAux;
-//     vector<position> path; //Vetor para guardar todos os vertices percorridos
-//     queue<int> nextVertex;
+// vector<int> Graph::DFS(int current, vector<int> path, int target){
+   
+//     _graph[current]._color = 1;
 
-//     //Verifica se o fantasma passou pelo pacman
-//     if(ghostPosition == pacmanPosition) {
-//         end = true;
-//         foundByGhost = true;
+//     for(int i = 0; i < sizeof(_graph[current]._near); i++){
+//         int neighbour = _graph[current]._near[i]._next;
+//         if(path.end() != target && _graph[neighbour]._color == 0){
+//             path.push_back(neighbour);
+//             DFS(neighbour, path);
+//             path.pop();
+//         }
 //     }
 
-//     //Pinta o vertice atual de cinza
-//     _graph[pacmanPosition]._color = 1;
-
-//     //Seta a distancia como 0 (posicao do Pacman)
-//     _graph[pacmanPosition].distance = 0;
+//     // 0, 1, 3, P, 4, 2
     
-//     //Insere na fila o vértice atual
-//     nextVertex.push(pacmanPosition);
-
-//     // Enquanto não achar o fantasma e enquanto a fila não estiver vazia
-//     while(!end && !nextVertex.empty()){
-        
-//         //Retira um vértice da fila
-//         current = nextVertex.front();
-//         nextVertex.pop();
-        
-//         //Pinta o vértice de preto
-//         _graph[current]._color = 2;
-
-//         //Verifica cada vizinho do vertice preto
-//         for(int i = 0; i < _graph[current]._near.size(); i++){
-            
-//             // Guarda o numero do vertice do vizinho
-//             int neighbor = _graph[current]._near[i]._next;
-
-//             //Se vizinho eh branco
-//             if (_graph[neighbor]._color == 0){
-
-//                 //Atualiza a distancia do vizinho que vai ser visitado:
-//                 int neighborPredecessor = _graph[current]._near[i]._predecessor;
-//                 _graph[neighbor].distance = _graph[neighborPredecessor].distance + 1;
-
-//                 //Insere no vetor de caminhos
-//                 path.push_back(_graph[current]._near[i]);
-//                 tamPath++;
-                
-//                 //Pinta o vizinho de cinza
-//                 _graph[neighbor]._color = 1;
-
-//                 //Verifica se o Pacman chegou no fantasma
-//                 if(neighbor == ghostPosition) {
-//                     end = true;
-//                     break;
-//                 }
-
-//                 //Insere vizinho na fila
-//                 nextVertex.push(_graph[current]._near[i]._next);
-
-//             }
-//         }
-
-//     }
-
-//     //Melhor caminho
-//     vector<char> bestPath;
-
-//     if(!foundByGhost && end) {
-//         // Guarda a menor distancia (a que chegou no fantasma)
-//         int distance = _graph[ghostPosition].distance;
-//         bestPath.resize(distance);
-
-//         // Indice para bestPath
-//         int j = distance - 1;
-
-//         //Guarda predecessor do fantasma
-//         int predecessor = path[tamPath - 1]._predecessor;
-        
-//         //Insere movimento ao chegar no fantasma
-//         bestPath[j] = path[tamPath - 1]._direction;
-
-//         j--;
-
-//         //Insere os movimentos para chegar no fantasma (vetor de frente para tras):
-//         for(int i = tamPath - 2; i >= 0; i--) {
-//             if(path[i]._next == predecessor) {
-//                 bestPath[j] = path[i]._direction;
-//                 predecessor = path[i]._predecessor;
-//                 j--;
-//             }
-//         }
-//     }
-
-//     //Reseta as cores dos vértices para a próxima busca
-//     resetGraph();
-
-//     return bestPath;
 // }
+
+//Função de busca em largura
+vector<int> Graph::BreadthFirstSearch(int pacmanPosition, int ghostPosition, bool &foundByGhost){
+    int tamPath = 0;
+    int current;
+    bool end = false;
+    position posAux;
+    vector<position> path; //Vetor para guardar todos os vertices percorridos
+    queue<int> nextVertex;
+
+    //Verifica se o fantasma passou pelo pacman
+    // if(ghostPosition == pacmanPosition) {
+    //     end = true;
+    //     foundByGhost = true;
+    // }
+
+    //Pinta o vertice atual de cinza
+    _graph[pacmanPosition]._color = 1;
+
+    //Seta a distancia como 0 (posicao do Pacman)
+    _graph[pacmanPosition]._distance = 0;
+    
+    //Insere na fila o vértice atual
+    nextVertex.push(pacmanPosition);
+
+    // Enquanto não achar o fantasma e enquanto a fila não estiver vazia
+    while(!end && !nextVertex.empty()){
+        
+        //Retira um vértice da fila
+        current = nextVertex.front();
+        nextVertex.pop();
+        
+        //Pinta o vértice de preto
+        _graph[current]._color = 2;
+
+        //Verifica cada vizinho do vertice preto
+        for(int i = 0; i < _graph[current]._near.size(); i++){
+            
+            // Guarda o numero do vertice do vizinho
+            int neighbor = _graph[current]._near[i]._next;
+
+            //Se vizinho eh branco
+            if (_graph[neighbor]._color == 0){
+
+                //Atualiza a distancia do vizinho que vai ser visitado:
+                // int neighborPredecessor = _graph[neighbor]._predecessor;
+                // _graph[neighbor]._distance = _graph[neighborPredecessor]._distance + _graph[neighborPredecessor]._near[i]._cost;
+                _graph[neighbor]._distance = _graph[current]._distance + _graph[current]._near[i]._cost;
+
+                //Insere no vetor de caminhos
+                path.push_back(_graph[current]._near[i]);
+                tamPath++;
+                
+                //Pinta o vizinho de cinza
+                _graph[neighbor]._color = 1;
+
+                //Verifica se o Pacman chegou no fantasma
+                if(neighbor == ghostPosition) {
+                    end = true;
+                    break;
+                }
+
+                //Insere vizinho na fila
+                nextVertex.push(neighbor);
+
+            }
+        }
+
+    }
+
+    //Melhor caminho
+    vector<int> bestPath;
+
+    // if(end) {
+    //     // Guarda a menor distancia (a que chegou no fantasma)
+    //     int distance = _graph[ghostPosition]._distance;
+    //     bestPath.resize(distance);
+
+    //     // Indice para bestPath
+    //     int j = distance - 1;
+
+    //     //Guarda predecessor do fantasma
+    //     int predecessor = path[tamPath - 1]._predecessor;
+        
+    //     //Insere movimento ao chegar no fantasma
+    //     bestPath[j] = path[tamPath - 1]._direction;
+
+    //     j--;
+
+    //     //Insere os movimentos para chegar no fantasma (vetor de frente para tras):
+    //     for(int i = tamPath - 2; i >= 0; i--) {
+    //         if(path[i]._next == predecessor) {
+    //             bestPath[j] = path[i]._direction;
+    //             predecessor = path[i]._predecessor;
+    //             j--;
+    //         }
+    //     }
+    // }
+
+    //Reseta as cores dos vértices para a próxima busca
+    resetGraph();
+
+    return bestPath;
+}

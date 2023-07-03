@@ -10,7 +10,7 @@
 using namespace std;
 
 typedef struct _position{
-    int _next; // Vértice para onde o Pacman foi no movimento
+    int _next; 
     int _cost;
 }position;
 
@@ -19,9 +19,10 @@ typedef struct _vertex{
     vector<position> _near;
     int _distance = INT_MAX;
     int _predecessor = -1;
+    int _color = 0;
 }vertex;
 
-
+// _graph[i]._near[j].next
 class Graph{
     private:
         int _vertexes;
@@ -36,9 +37,11 @@ class Graph{
         int getVertexes();
         int getEdges();
         vertex getNode(int position);
+        int Graph::getCost(position pos);
         void printGraph();
         void resetGraph();
-        // vector<char> BreadthFirstSearch(int pacmanPosition, int ghostPosition, bool &foundByGhost);
+        vector<int> DFS(int vertex, vector<int> path);
+        vector<char> BreadthFirstSearch(int pacmanPosition, int ghostPosition, bool &foundByGhost);
 };
 
 
