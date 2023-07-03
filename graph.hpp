@@ -41,7 +41,7 @@ class Graph{
         void printGraph();
         void resetGraph();
         vector<int> DFS(int vertex, vector<int> path);
-        vector<char> BreadthFirstSearch(int pacmanPosition, int ghostPosition, bool &foundByGhost);
+        vector<int> BreadthFirstSearch(int pacmanPosition, int ghostPosition);
 };
 
 
