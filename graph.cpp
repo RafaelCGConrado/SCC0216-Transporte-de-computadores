@@ -83,7 +83,7 @@ void Graph::resetGraph(){
 // }
 
 //Função de busca em largura
-vector<int> Graph::BreadthFirstSearch(int pacmanPosition, int ghostPosition, bool &foundByGhost){
+vector<int> Graph::BreadthFirstSearch(int pacmanPosition, int ghostPosition){
     int tamPath = 0;
     int current;
     bool end = false;
