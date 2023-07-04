@@ -45,7 +45,11 @@ int Graph::getEdges(){
 }
 
 int Graph::getCost(int source, int destination){
-    return _graph[source]._near[destination]._cost;
+    for (int i = 0; i < _edgeCount; i++){
+        if (source == _edges[i]._source && destination == _edges[i]._destination)
+            return _edges[i]._cost;
+    }
+    return 0;
 }
 
 //Retorna o nó do grafo
@@ -97,11 +101,11 @@ vector<int> Graph::bellmanFord(int current, int target){
             int v = _edges[j]._destination;
             int w = _edges[j]._cost;
             
-            cout << "u: " << u << ", " << _graph[u]._distance << "|" << " v: " << v << ", " << _graph[v]._distance << endl;
+            // cout << "u: " << u << ", " << _graph[u]._distance << "|" << " v: " << v << ", " << _graph[v]._distance << endl;
             if(_graph[u]._distance != INT_MAX && _graph[u]._distance + w < _graph[v]._distance){
                 _graph[v]._distance = _graph[u]._distance + w;
                 _graph[v]._predecessor = u;
-                cout << "Mudou: " << u << "->" << v << endl;
+                // cout << "Mudou: " << u << "->" << v << endl;
             }
         }
     }
@@ -116,7 +120,21 @@ vector<int> Graph::bellmanFord(int current, int target){
     
     flip(path);
 
+    path.push_back(target);
+
     return path;
+}
+
+int Graph::VIP(int target){
+    vector<int> bestPath = this->bellmanFord(0, target);
+    int totalCost = 0;
+    int nonVisited = _vertexCount - bestPath.size();
+
+    for (int i = 0; i < bestPath.size()-1; i++){
+        totalCost += this->getCost(bestPath[i], bestPath[i+1]);
+    }
+
+    return totalCost*nonVisited;
 }
 
 // vector<int> Graph::DFS(int current, vector<int> path, int target){

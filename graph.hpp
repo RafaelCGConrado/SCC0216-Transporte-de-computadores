@@ -37,7 +37,7 @@ class Graph{
         vector<edge> _edges;
     public:
         Graph(int vertexes, int edges);
-        oid addEdge(int originVertex, int destinyVertex, int cost);
+        void addEdge(int originVertex, int destinyVertex, int cost);
         int getVertexes();
         int getEdges();
         vertex getNode(int position);
@@ -45,6 +45,7 @@ class Graph{
         void printGraph();
         void resetGraph();
         vector<int> bellmanFord(int current, int target);
+        int VIP(int target);
         vector<int> DFS(int vertex, vector<int> path);
         vector<int> BreadthFirstSearch(int pacmanPosition, int ghostPosition);
 };

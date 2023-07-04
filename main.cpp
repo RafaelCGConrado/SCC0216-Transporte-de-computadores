@@ -19,7 +19,7 @@ int main(){
         
         graph.addEdge(a, b, w);
     }
-    graph.printGraph();
+    // graph.printGraph();
 
     cin >> target;
 
@@ -29,6 +29,10 @@ int main(){
         cout << bestPath[i] << " ";
     }
     cout << endl;
+
+    int cost = graph.VIP(target);
+
+    cout << "Custo do caminho VIP: " << cost << endl;
 
     // graph.printGraph();
 
