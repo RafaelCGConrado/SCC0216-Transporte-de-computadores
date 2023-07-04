@@ -14,32 +14,37 @@ typedef struct _position{
     int _cost;
 }position;
 
+typedef struct _edge{
+    int _source;
+    int _destination;
+    int _cost;
+}edge;
+
 // Color: 0 = branco, 1 = cinza, 2 = preto
 typedef struct _vertex{
     vector<position> _near;
-    int _distance = INT_MAX;
-    int _predecessor = -1;
-    int _color = 0;
+    int _distance;
+    int _predecessor;
+    int _color;
 }vertex;
 
 // _graph[i]._near[j].next
 class Graph{
     private:
-        int _vertexes;
-        int _edges;
+        int _vertexCount;
+        int _edgeCount;
         vector<vertex> _graph;
+        vector<edge> _edges;
     public:
         Graph(int vertexes, int edges);
-        // 0 1 1
-        // 0 -> {1|1}
-        // 1 -> {0|1}
-        void addEdge(int originVertex, int destinyVertex, int cost);
+        oid addEdge(int originVertex, int destinyVertex, int cost);
         int getVertexes();
         int getEdges();
         vertex getNode(int position);
-        int Graph::getCost(position pos);
+        int getCost(int source, int destination);
         void printGraph();
         void resetGraph();
+        vector<int> bellmanFord(int current, int target);
         vector<int> DFS(int vertex, vector<int> path);
         vector<int> BreadthFirstSearch(int pacmanPosition, int ghostPosition);
 };

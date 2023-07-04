@@ -6,6 +6,7 @@
 int main(){
     int m, n;
     int a, b, w;
+    int target;
 
     cin >> m >> n;
 
@@ -18,8 +19,18 @@ int main(){
         
         graph.addEdge(a, b, w);
     }
-
     graph.printGraph();
+
+    cin >> target;
+
+    vector<int> bestPath = graph.bellmanFord(0, target);
+
+    for (int i = 0; i < bestPath.size(); i++){
+        cout << bestPath[i] << " ";
+    }
+    cout << endl;
+
+    // graph.printGraph();
 
     
 // 6 7
@@ -30,7 +41,7 @@ int main(){
 // 2 4 2
 // 3 4 3
 // 4 5 4
-
+// 5
 
 
 }
