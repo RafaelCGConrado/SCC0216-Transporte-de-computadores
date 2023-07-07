@@ -34,6 +34,10 @@ int main(){
 
     cout << "Custo do caminho VIP: " << cost << endl;
 
+    cost = graph.Standard();
+
+    cout << "Custo do caminho Padrão: " << cost << endl;
+
     // graph.printGraph();
 
     

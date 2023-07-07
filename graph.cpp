@@ -125,6 +125,40 @@ vector<int> Graph::bellmanFord(int current, int target){
     return path;
 }
 
+// 1 1 1   1 1
+// 0 1 2 3 4 5
+// 0 - 1
+// 0 - 2
+// ...
+// custo0-1
+// custo0-2
+
+int Graph::Standard(){
+    int cost = 0;
+    vector<bool> visited;
+
+    for (int i = 0; i < _vertexCount; i++){
+        visited.push_back(false);
+    }
+
+    visited[0] = true;
+
+    for (int i = 1; i < _vertexCount; i++){
+        vector<int> path = this->bellmanFord(0, i);
+
+        for (int j = 0; j < path.size()-1; j++){
+            if (!visited[path[j+1]]){
+                cout << path[j] << " -> " << path[j+1] << endl;
+                cout << this->getCost(path[j], path[j+1]) << endl;
+                cost += this->getCost(path[j], path[j+1]);
+                visited[path[j+1]] = true;
+            }
+        }
+    }
+
+    return cost;
+}
+
 int Graph::VIP(int target){
     vector<int> bestPath = this->bellmanFord(0, target);
     int totalCost = 0;

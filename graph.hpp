@@ -45,6 +45,7 @@ class Graph{
         void printGraph();
         void resetGraph();
         vector<int> bellmanFord(int current, int target);
+        int Standard();
         int VIP(int target);
         vector<int> DFS(int vertex, vector<int> path);
         vector<int> BreadthFirstSearch(int pacmanPosition, int ghostPosition);
