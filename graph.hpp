@@ -28,7 +28,7 @@ typedef struct _vertex{
     int _color;
 }vertex;
 
-// _graph[i]._near[j].next
+
 class Graph{
     private:
         int _vertexCount;

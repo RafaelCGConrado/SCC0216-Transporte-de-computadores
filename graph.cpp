@@ -1,12 +1,13 @@
 #include "graph.hpp"
 
-//Constrói o grafo a partir do tabuleiro do jogo
+//Constrói o grafo
 Graph::Graph(int vertexCount, int edgeCount){
     _vertexCount = vertexCount;
     _edgeCount = edgeCount;
     _graph.resize(_vertexCount);
-    // _edges.resize(_edgeCount);
-
+    
+    //Define os antecessores como -1
+    //e define as distâncias iniciais com o máximo valor possível
     for (int i = 0; i < _vertexCount; i++){
         _graph[i]._distance = INT_MAX;
         _graph[i]._predecessor = -1;
@@ -44,6 +45,7 @@ int Graph::getEdges(){
     return _edgeCount;
 }
 
+//Retorna o custo/peso de uma determinada aresta
 int Graph::getCost(int source, int destination){
     for (int i = 0; i < _edgeCount; i++){
         if (source == _edges[i]._source && destination == _edges[i]._destination)
@@ -56,7 +58,6 @@ int Graph::getCost(int source, int destination){
 vertex Graph::getNode(int position){
    return _graph[position];  
 }
-
 
 
 //Printa o gráfico, mostrando cada vértice e suas adjacências
@@ -74,14 +75,7 @@ void Graph::printGraph(){
     }
 }
 
-//Reseta as cores de todos os vértices. Fundamental para a função do BFS.
-void Graph::resetGraph(){
-    for(int i = 0; i < _vertexCount; i++) {
-        _graph[i]._distance = INT_MAX;
-        _graph[i]._predecessor = -1;
-    }
-}
-
+//Inverte os elementos de um vector
 void flip(vector<int> &v){
     int size = v.size();
     int j = size-1;
@@ -91,26 +85,29 @@ void flip(vector<int> &v){
     }
 }
 
+//Algoritmo de Bellman Ford utilizado para determinar
+//os caminhos de menor custo a partir do vértice atual
+//e do vértice de destino
 vector<int> Graph::bellmanFord(int current, int target){
     _graph[current]._distance = 0;
 
-    // Relaxing:
+    //Promove o relaxamento das arestas:
     for(int i = 0; i < _vertexCount-1; i++) {
         for(int j = 0; j < _edgeCount; j++) {
             int u = _edges[j]._source;
             int v = _edges[j]._destination;
             int w = _edges[j]._cost;
             
-            // cout << "u: " << u << ", " << _graph[u]._distance << "|" << " v: " << v << ", " << _graph[v]._distance << endl;
-            if(_graph[u]._distance != INT_MAX && _graph[u]._distance + w < _graph[v]._distance){
+
+            if(_graph[u]._distance != INT_MAX && _graph[u]._distance + w <= _graph[v]._distance){
                 _graph[v]._distance = _graph[u]._distance + w;
                 _graph[v]._predecessor = u;
-                // cout << "Mudou: " << u << "->" << v << endl;
+                
             }
         }
     }
 
-    // Guarda caminho
+    // Guarda o caminho obtido em um vector
     vector<int> path;
     int predecessor = _graph[target]._predecessor;
     while (predecessor > -1){
@@ -118,25 +115,19 @@ vector<int> Graph::bellmanFord(int current, int target){
         predecessor = _graph[predecessor]._predecessor;
     }
     
+    //Inverte o caminho (que foi armazenado de trás para frente)
     flip(path);
-
     path.push_back(target);
 
     return path;
 }
 
-// 1 1 1   1 1
-// 0 1 2 3 4 5
-// 0 - 1
-// 0 - 2
-// ...
-// custo0-1
-// custo0-2
-
+//Algoritmo para determinar o custo total de uma entrega do tipo Standard
 int Graph::Standard(){
     int cost = 0;
     vector<bool> visited;
 
+    //Inicia o vector de visitados
     for (int i = 0; i < _vertexCount; i++){
         visited.push_back(false);
     }
@@ -148,8 +139,6 @@ int Graph::Standard(){
 
         for (int j = 0; j < path.size()-1; j++){
             if (!visited[path[j+1]]){
-                cout << path[j] << " -> " << path[j+1] << endl;
-                cout << this->getCost(path[j], path[j+1]) << endl;
                 cost += this->getCost(path[j], path[j+1]);
                 visited[path[j+1]] = true;
             }
@@ -159,6 +148,7 @@ int Graph::Standard(){
     return cost;
 }
 
+//Algoritmo para determinar o custo total de uma entrega do tipo VIP
 int Graph::VIP(int target){
     vector<int> bestPath = this->bellmanFord(0, target);
     int totalCost = 0;
@@ -171,123 +161,3 @@ int Graph::VIP(int target){
     return totalCost*nonVisited;
 }
 
-// vector<int> Graph::DFS(int current, vector<int> path, int target){
-   
-//     _graph[current]._color = 1;
-
-//     for(int i = 0; i < sizeof(_graph[current]._near); i++){
-//         int neighbour = _graph[current]._near[i]._next;
-//         if(path.end() != target && _graph[neighbour]._color == 0){
-//             path.push_back(neighbour);
-//             DFS(neighbour, path);
-//             path.pop();
-//         }
-//     }
-
-//     // 0, 1, 3, P, 4, 2
-    
-// }
-
-//Função de busca em largura
-// vector<int> Graph::BreadthFirstSearch(int pacmanPosition, int ghostPosition){
-//     int tamPath = 0;
-//     int current;
-//     bool end = false;
-//     position posAux;
-//     vector<position> path; //Vetor para guardar todos os vertices percorridos
-//     queue<int> nextVertex;
-
-//     //Verifica se o fantasma passou pelo pacman
-//     // if(ghostPosition == pacmanPosition) {
-//     //     end = true;
-//     //     foundByGhost = true;
-//     // }
-
-//     //Pinta o vertice atual de cinza
-//     _graph[pacmanPosition]._color = 1;
-
-//     //Seta a distancia como 0 (posicao do Pacman)
-//     _graph[pacmanPosition]._distance = 0;
-    
-//     //Insere na fila o vértice atual
-//     nextVertex.push(pacmanPosition);
-
-//     // Enquanto não achar o fantasma e enquanto a fila não estiver vazia
-//     while(!end && !nextVertex.empty()){
-        
-//         //Retira um vértice da fila
-//         current = nextVertex.front();
-//         nextVertex.pop();
-        
-//         //Pinta o vértice de preto
-//         _graph[current]._color = 2;
-
-//         //Verifica cada vizinho do vertice preto
-//         for(int i = 0; i < _graph[current]._near.size(); i++){
-            
-//             // Guarda o numero do vertice do vizinho
-//             int neighbor = _graph[current]._near[i]._next;
-
-//             //Se vizinho eh branco
-//             if (_graph[neighbor]._color == 0){
-
-//                 //Atualiza a distancia do vizinho que vai ser visitado:
-//                 // int neighborPredecessor = _graph[neighbor]._predecessor;
-//                 // _graph[neighbor]._distance = _graph[neighborPredecessor]._distance + _graph[neighborPredecessor]._near[i]._cost;
-//                 _graph[neighbor]._distance = _graph[current]._distance + _graph[current]._near[i]._cost;
-
-//                 //Insere no vetor de caminhos
-//                 path.push_back(_graph[current]._near[i]);
-//                 tamPath++;
-                
-//                 //Pinta o vizinho de cinza
-//                 _graph[neighbor]._color = 1;
-
-//                 //Verifica se o Pacman chegou no fantasma
-//                 if(neighbor == ghostPosition) {
-//                     end = true;
-//                     break;
-//                 }
-
-//                 //Insere vizinho na fila
-//                 nextVertex.push(neighbor);
-
-//             }
-//         }
-
-//     }
-
-//     //Melhor caminho
-//     vector<int> bestPath;
-
-//     // if(end) {
-//     //     // Guarda a menor distancia (a que chegou no fantasma)
-//     //     int distance = _graph[ghostPosition]._distance;
-//     //     bestPath.resize(distance);
-
-//     //     // Indice para bestPath
-//     //     int j = distance - 1;
-
-//     //     //Guarda predecessor do fantasma
-//     //     int predecessor = path[tamPath - 1]._predecessor;
-        
-//     //     //Insere movimento ao chegar no fantasma
-//     //     bestPath[j] = path[tamPath - 1]._direction;
-
-//     //     j--;
-
-//     //     //Insere os movimentos para chegar no fantasma (vetor de frente para tras):
-//     //     for(int i = tamPath - 2; i >= 0; i--) {
-//     //         if(path[i]._next == predecessor) {
-//     //             bestPath[j] = path[i]._direction;
-//     //             predecessor = path[i]._predecessor;
-//     //             j--;
-//     //         }
-//     //     }
-//     // }
-
-//     //Reseta as cores dos vértices para a próxima busca
-//     resetGraph();
-
-//     return bestPath;
-// }

@@ -2,6 +2,13 @@
 #include <vector>
 #include "graph.hpp"
 
+/*
+    Trabalho 4 de Modelagem Computacional em Grafos
+    Alunos:
+        João Pedro Buzzo Silva - NUSP 1042591
+        Rafael Comitre Garcia Conrado - NUSP 13671806
+        Victor Hugo Trigolo Amaral - NUSP 12688487
+*/
 
 int main(){
     int m, n;
@@ -12,6 +19,7 @@ int main(){
 
     Graph graph = Graph(m, n);
 
+    //Leitura dos vértices, arestas e seus respectivos pesos
     for(int i = 0; i < n; i++){
         cin >> a;
         cin >> b;
@@ -19,37 +27,26 @@ int main(){
         
         graph.addEdge(a, b, w);
     }
-    // graph.printGraph();
 
     cin >> target;
 
-    vector<int> bestPath = graph.bellmanFord(0, target);
+    //Calcula o custo para a entrega VIP
+    int costVip = graph.VIP(target);
 
-    for (int i = 0; i < bestPath.size(); i++){
-        cout << bestPath[i] << " ";
+    //Calcula o custo para a entrega padrão
+    int costStd = graph.Standard();
+
+    if(costVip == costStd){
+        cout << "NDA" << endl << costVip << endl;
     }
-    cout << endl;
 
-    int cost = graph.VIP(target);
+    else if(costVip < costStd){
+        cout << "VIP" << endl << costVip << endl;
+    }
 
-    cout << "Custo do caminho VIP: " << cost << endl;
-
-    cost = graph.Standard();
-
-    cout << "Custo do caminho Padrão: " << cost << endl;
-
-    // graph.printGraph();
-
-    
-// 6 7
-// 0 1 1
-// 0 2 2
-// 0 3 3
-// 1 4 3
-// 2 4 2
-// 3 4 3
-// 4 5 4
-// 5
+    else{
+        cout << "PADRAO" << endl <<costStd << endl;
+    }
 
 
 }
