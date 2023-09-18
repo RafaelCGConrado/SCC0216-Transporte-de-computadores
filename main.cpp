@@ -5,9 +5,9 @@
 /*
     Trabalho 4 de Modelagem Computacional em Grafos
     Alunos:
-        João Pedro Buzzo Silva - NUSP 1042591
-        Rafael Comitre Garcia Conrado - NUSP 13671806
-        Victor Hugo Trigolo Amaral - NUSP 12688487
+        João Pedro Buzzo Silva
+        Rafael Comitre Garcia Conrado
+        Victor Hugo Trigolo Amaral
 */
 
 int main(){
